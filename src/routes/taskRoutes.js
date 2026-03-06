@@ -7,7 +7,7 @@ const router = express.Router();
 // Apply auth middleware
 router.use(authMiddleware);
 
-//Creating a new task route
+//Route to create a new task 
 router.post("/", async (req, res) => {
   try {
     const { title, description, completed } = req.body;
@@ -24,6 +24,8 @@ router.post("/", async (req, res) => {
     });
 
     await task.save();
+    
+
     res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ error: "Server error" });
@@ -40,7 +42,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// DELETE /api/tasks/:id
+// DELETE a task by id
 router.delete("/:id", async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
@@ -54,7 +56,6 @@ router.delete("/:id", async (req, res) => {
       return res.status(403).json({ error: "Not authorized" });
     }
 
-    // - Delete task
     await Task.findByIdAndDelete(req.params.id);
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
