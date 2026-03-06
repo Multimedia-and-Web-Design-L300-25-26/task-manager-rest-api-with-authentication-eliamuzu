@@ -8,8 +8,6 @@ import mongoose from "mongoose";
 // - password (String, required, minlength 6)
 // - createdAt (default Date.now)
 
-
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -26,6 +24,7 @@ const userSchema = new mongoose.Schema({
     minLength: 6
   },
   createdAt: {
+    type: Date,
     default: Date.now
   }
 });
