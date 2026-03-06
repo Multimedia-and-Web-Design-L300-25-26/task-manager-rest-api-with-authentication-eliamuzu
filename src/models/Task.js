@@ -24,7 +24,7 @@ const taskSchema = new mongoose.Schema({
         required: true,
     },
     createdAt: {
-        default: Date().toString()
+        default: Date.now
     }
 });
 
