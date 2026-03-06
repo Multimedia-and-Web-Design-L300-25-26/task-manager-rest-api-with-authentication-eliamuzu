@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-
 // 1. Extract token from Authorization header
 // 2. Verify token
 // 3. Find user
@@ -10,7 +9,28 @@ import User from "../models/User.js";
 // 6. If invalid → return 401
 
 const authMiddleware = async (req, res, next) => {
-  //  implement here
+  try {
+    const authHeader = req.header("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+    //Attach user to req.user
+    req.user = user;
+
+    // Call next()
+    next();
+  } catch (error) {
+    // If invalid → return 401
+    return res.status(401).json({ error: "Invalid token" });
+  }
 };
 
 export default authMiddleware;
